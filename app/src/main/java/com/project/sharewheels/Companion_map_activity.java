@@ -40,7 +40,7 @@ public class Companion_map_activity extends AppCompatActivity implements Locatio
     LocationManager locationManager;
     Location mLastlocation;
     MapView map;
-    Marker mMarker;
+    Marker mMarker, marker2;
     private Button mLogout, mRequest;
 
     private GeoPoint pickup_location;
@@ -101,6 +101,7 @@ public class Companion_map_activity extends AppCompatActivity implements Locatio
 
         mRequest = (Button) findViewById(R.id.request);
         mRequest.setOnClickListener(new View.OnClickListener() {
+            //private boolean state = false;
             @Override
             public void onClick(View v) {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -110,15 +111,25 @@ public class Companion_map_activity extends AppCompatActivity implements Locatio
                 geoFire.setLocation(userId, new GeoLocation(mLastlocation.getLatitude(), mLastlocation.getLongitude()));
 
                 pickup_location = new GeoPoint(mLastlocation.getLatitude(), mLastlocation.getLongitude());
-                mMarker = new Marker(map);
-                mMarker.setPosition(pickup_location);
-                //mMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                mMarker.setTitle("Pickup Here");
-                mMarker.setPanToView(true);
-                map.getOverlays().add(mMarker);
+                marker2 = new Marker(map);
+                marker2.setPosition(pickup_location);
+                marker2.setIcon(getResources().getDrawable(R.drawable.ic_location));
+                mMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                marker2.setTitle("Pickup Here");
+                marker2.setPanToView(true);
+                map.getOverlays().add(marker2);
                 map.invalidate();
 
+
                 mRequest.setText("Getting your Rider...");
+                /*if ( state ) {
+                    state = false;
+                    mRequest.setText("Raise Request");
+                    marker2.remove(findViewById(R.id.map));
+                } else {
+                    state = true;
+                    mRequest.setText("Getting your Rider...");
+                }*/
             }
         });
 
@@ -139,8 +150,9 @@ public class Companion_map_activity extends AppCompatActivity implements Locatio
 
         mMarker = new Marker(map);
         mMarker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+        mMarker.setIcon(getResources().getDrawable(R.drawable.ic_companion));
         mMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mMarker.setTitle("Give it a title");
+        mMarker.setTitle("My location");
         mMarker.setPanToView(true);
         map.getOverlays().add(mMarker);
         map.invalidate();
